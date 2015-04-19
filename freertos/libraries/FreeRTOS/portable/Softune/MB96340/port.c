@@ -1,67 +1,70 @@
 /*
-    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
-	
+    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+    All rights reserved
 
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-     *    Complete, revised, and edited pdf reference manuals are also       *
-     *    available.                                                         *
-     *                                                                       *
-     *    Purchasing FreeRTOS documentation will not only help you, by       *
-     *    ensuring you get running as quickly as possible and with an        *
-     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-     *    the FreeRTOS project to continue with its mission of providing     *
-     *    professional grade, cross platform, de facto standard solutions    *
-     *    for microcontrollers - completely free of charge!                  *
-     *                                                                       *
-     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-     *                                                                       *
-     *    Thank you for using FreeRTOS, and thank you for your support!      *
-     *                                                                       *
-    ***************************************************************************
-
+    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
-    distribute a combined work that includes FreeRTOS without being obliged to
-    provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    1 tab == 4 spaces!
+    ***************************************************************************
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
+    ***************************************************************************
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
+    link: http://www.freertos.org/a00114.html
 
     ***************************************************************************
      *                                                                       *
-     *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that is more than just the market leader, it     *
+     *    is the industry's de facto standard.                               *
      *                                                                       *
-     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *    Help yourself get started quickly while simultaneously helping     *
+     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
+     *    tutorial book, reference manual, or both:                          *
+     *    http://www.FreeRTOS.org/Documentation                              *
      *                                                                       *
     ***************************************************************************
 
+    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
+    the FAQ page "My application does not run, what could be wrong?".  Have you
+    defined configASSERT()?
 
-    http://www.FreeRTOS.org - Documentation, training, latest information,
-    license and contact details.
+    http://www.FreeRTOS.org/support - In return for receiving this top quality
+    embedded software for free we request you assist our global community by
+    participating in the support forum.
+
+    http://www.FreeRTOS.org/training - Investing in training allows your team to
+    be as productive as possible as early as possible.  Now you can receive
+    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
+    Ltd, and the world's leading authority on the world's leading RTOS.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool.
+    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+    compatible FAT file system, and our tiny thread aware UDP/IP stack.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
-    the code with commercial support, indemnification, and middleware, under
-    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under
-    the SafeRTOS brand: http://www.SafeRTOS.com.
+    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
+    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
+    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and commercial middleware.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
+    mission critical applications that require provable dependability.
+
+    1 tab == 4 spaces!
 */
 
 #include "FreeRTOS.h"
@@ -71,15 +74,15 @@
  * Implementation of functions defined in portable.h for the 16FX port.
  *----------------------------------------------------------*/
 
-/*
- * Get current value of DPR and ADB registers
+/* 
+ * Get current value of DPR and ADB registers 
  */
-portSTACK_TYPE xGet_DPR_ADB_bank( void );
+StackType_t xGet_DPR_ADB_bank( void ); 
 
-/*
- * Get current value of DTB and PCB registers
+/* 
+ * Get current value of DTB and PCB registers 
  */
-portSTACK_TYPE xGet_DTB_PCB_bank( void );
+StackType_t xGet_DTB_PCB_bank( void );
 
 /*
  * Sets up the periodic ISR used for the RTOS tick.  This uses RLT0, but
@@ -89,25 +92,25 @@ static void prvSetupRLT0Interrupt( void );
 
 /*-----------------------------------------------------------*/
 
-/*
+/* 
  * We require the address of the pxCurrentTCB variable, but don't want to know
- * any details of its type.
+ * any details of its type. 
  */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /*-----------------------------------------------------------*/
 
-/*
- * Macro to save a task context to the task stack. This macro  copies the
- * saved context (AH:AL, DPR:ADB, DTB:PCB , PC and PS) from  the   system
- * stack to task stack pointed by user stack pointer ( USP  for SMALL and
+/* 
+ * Macro to save a task context to the task stack. This macro  copies the 
+ * saved context (AH:AL, DPR:ADB, DTB:PCB , PC and PS) from  the   system 
+ * stack to task stack pointed by user stack pointer ( USP  for SMALL and 
  * MEDIUM memory model amd USB:USP for COMPACT  and LARGE memory model ),
- * then  it pushes the general purpose registers RW0-RW7  on  to the task
- * stack. Finally the  resultant  stack  pointer  value is saved into the
- * task  control  block  so  it  can  be retrieved the next time the task
+ * then  it pushes the general purpose registers RW0-RW7  on  to the task 
+ * stack. Finally the  resultant  stack  pointer  value is saved into the 
+ * task  control  block  so  it  can  be retrieved the next time the task 
  * executes.
- */
+ */ 
 #if( ( configMEMMODEL == portSMALL ) || ( configMEMMODEL == portMEDIUM ) )
 
 	#define portSAVE_CONTEXT()											\
@@ -142,16 +145,16 @@ extern volatile tskTCB * volatile pxCurrentTCB;
 				__asm(" OR   CCR,#H'20 ");								\
 			}
 
-/*
+/* 
  * Macro to restore a task context from the task stack.  This is effecti-
  * vely the reverse of SAVE_CONTEXT(). First the stack pointer  value
- * (USP for SMALL and MEDIUM memory model amd  USB:USP  for  COMPACT  and
- * LARGE memory model ) is loaded from the task  control block.  Next the
+ * (USP for SMALL and MEDIUM memory model amd  USB:USP  for  COMPACT  and 
+ * LARGE memory model ) is loaded from the task  control block.  Next the 
  * value of all the general purpose registers RW0-RW7 is retrieved. Fina-
- * lly it copies of the context ( AH:AL,  DPR:ADB, DTB:PCB, PC and PS) of
- * the task to be executed upon RETI from user stack to system stack.
+ * lly it copies of the context ( AH:AL,  DPR:ADB, DTB:PCB, PC and PS) of 
+ * the task to be executed upon RETI from user stack to system stack.  
  */
-
+ 
 	#define portRESTORE_CONTEXT()										\
 			{	__asm(" MOVW A, _pxCurrentTCB ");						\
 				__asm(" MOVW A, @A ");									\
@@ -217,7 +220,7 @@ extern volatile tskTCB * volatile pxCurrentTCB;
 				__asm(" MOV A, USB ");									\
 				__asm(" MOV @RL2+2, A ");								\
 			}	
-
+            
 	#define portRESTORE_CONTEXT()										\
 			{	__asm(" MOVL A, _pxCurrentTCB ");						\
 				__asm(" MOVL RL2, A ");									\
@@ -255,10 +258,10 @@ extern volatile tskTCB * volatile pxCurrentTCB;
 
 /*-----------------------------------------------------------*/	
 
-/*
+/* 
  * Functions for obtaining the current value  of  DPR:ADB, DTB:PCB bank registers
  */
-
+ 
 #pragma asm
 
         .GLOBAL    _xGet_DPR_ADB_bank
@@ -273,9 +276,9 @@ _xGet_DPR_ADB_bank:
     ORW A
 	#if configMEMMODEL == portMEDIUM || configMEMMODEL == portLARGE
 		RETP
-	#elif configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT
+	#elif configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT   
 		RET
-	#endif
+	#endif 
 
 
 _xGet_DTB_PCB_bank:
@@ -286,22 +289,22 @@ _xGet_DTB_PCB_bank:
     ORW A
 	#if configMEMMODEL == portMEDIUM || configMEMMODEL == portLARGE
 		RETP
-	#elif configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT
+	#elif configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT   
 		RET
-	#endif
+	#endif 
 
 #pragma endasm
 /*-----------------------------------------------------------*/
 
-/*
- * Initialise the stack of a task to look exactly as if a call to
+/* 
+ * Initialise the stack of a task to look exactly as if a call to 
  * portSAVE_CONTEXT had been called.
- *
+ * 
  * See the header file portable.h.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
-	/* Place a few bytes of known values on the bottom of the stack.
+	/* Place a few bytes of known values on the bottom of the stack. 
 	This is just useful for debugging. */
 	*pxTopOfStack = 0x1111;
 	pxTopOfStack--;
@@ -312,42 +315,42 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
 	/* Once the task is called the task  would  push  the  pointer to the
 	parameter onto the stack. Hence here the pointer would be copied to the stack
-	first.  When using the COMPACT or LARGE memory model the pointer would be 24
-	bits, and when using the SMALL or MEDIUM memory model the pointer would be 16
-	bits. */
+	first.  When using the COMPACT or LARGE memory model the pointer would be 24 
+	bits, and when using the SMALL or MEDIUM memory model the pointer would be 16 
+	bits. */ 
 	#if( ( configMEMMODEL == portCOMPACT ) || ( configMEMMODEL == portLARGE ) )
 	{
-		*pxTopOfStack = ( portSTACK_TYPE ) ( ( unsigned long ) ( pvParameters ) >> 16 );
-		pxTopOfStack--;
+		*pxTopOfStack = ( StackType_t ) ( ( uint32_t ) ( pvParameters ) >> 16 );
+		pxTopOfStack--;         
 	}
 	#endif
 
-    *pxTopOfStack = ( portSTACK_TYPE ) ( pvParameters );
-    pxTopOfStack--;
-
-    /* This is redundant push to the stack. This is required in order to introduce
-    an offset so that the task accesses a parameter correctly that is passed on to
+    *pxTopOfStack = ( StackType_t ) ( pvParameters );
+    pxTopOfStack--;                  
+    
+    /* This is redundant push to the stack. This is required in order to introduce 
+    an offset so that the task accesses a parameter correctly that is passed on to 
     the task stack. */
 	#if( ( configMEMMODEL == portMEDIUM ) || ( configMEMMODEL == portLARGE ) )
 	{
-		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( long ) ( pxCode ) >> 16 ) & 0xff );
-		pxTopOfStack--;
+		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( int32_t ) ( pxCode ) >> 16 ) & 0xff );      
+		pxTopOfStack--;       
 	}
 	#endif
 
-    /* This is redundant push to the stack. This is required in order to introduce
+    /* This is redundant push to the stack. This is required in order to introduce 
     an offset so the task correctly accesses the parameter passed on the task stack. */
-    *pxTopOfStack = ( portSTACK_TYPE ) ( pxCode );
-    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) ( pxCode );
+    pxTopOfStack--;       
 
     /* PS - User Mode, ILM=7, RB=0, Interrupts enabled,USP */
     *pxTopOfStack = 0xE0C0;							
-	pxTopOfStack--;
+	pxTopOfStack--; 
 
 	/* PC */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( pxCode );
-    pxTopOfStack--;
-
+	*pxTopOfStack = ( StackType_t ) ( pxCode );     
+    pxTopOfStack--;      
+    
     /* DTB | PCB */
 	#if configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT
 	{
@@ -360,39 +363,39 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	along with PC to indicate the start address of the function. */
 	#if( ( configMEMMODEL == portMEDIUM ) || ( configMEMMODEL == portLARGE ) )
 	{
-		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( long ) ( pxCode ) >> 16 ) & 0xff );
-		pxTopOfStack--;
+		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( int32_t ) ( pxCode ) >> 16 ) & 0xff );
+		pxTopOfStack--;       
 	}
 	#endif
 
 	/* DPR | ADB  */
 	*pxTopOfStack = xGet_DPR_ADB_bank();				
 	pxTopOfStack--;
-
+    
 	/* AL */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x9999;		
+	*pxTopOfStack = ( StackType_t ) 0x9999;		
 	pxTopOfStack--;
 
 	/* AH */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xAAAA;		
+	*pxTopOfStack = ( StackType_t ) 0xAAAA;		
 	pxTopOfStack--;
 	
 	/* Next the general purpose registers. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x7777;	/* RW7 */
+	*pxTopOfStack = ( StackType_t ) 0x7777;	/* RW7 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x6666;	/* RW6 */
+	*pxTopOfStack = ( StackType_t ) 0x6666;	/* RW6 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x5555;	/* RW5 */
+	*pxTopOfStack = ( StackType_t ) 0x5555;	/* RW5 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x4444;	/* RW4 */
+	*pxTopOfStack = ( StackType_t ) 0x4444;	/* RW4 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x3333;	/* RW3 */
+	*pxTopOfStack = ( StackType_t ) 0x3333;	/* RW3 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;	/* RW2 */
+	*pxTopOfStack = ( StackType_t ) 0x2222;	/* RW2 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;	/* RW1 */
+	*pxTopOfStack = ( StackType_t ) 0x1111;	/* RW1 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x8888;	/* RW0 */
+	*pxTopOfStack = ( StackType_t ) 0x8888;	/* RW0 */
 		
 	return pxTopOfStack;
 }
@@ -401,17 +404,17 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 static void prvSetupRLT0Interrupt( void )
 {
 /* The peripheral clock divided by 16 is used by the timer. */
-const unsigned short usReloadValue = ( unsigned short ) ( ( ( configCLKP1_CLOCK_HZ / configTICK_RATE_HZ ) / 16UL ) - 1UL );
+const uint16_t usReloadValue = ( uint16_t ) ( ( ( configCLKP1_CLOCK_HZ / configTICK_RATE_HZ ) / 16UL ) - 1UL );
 
 	/* set reload value = 34999+1, TICK Interrupt after 10 ms @ 56MHz of CLKP1 */
-	TMRLR0 = usReloadValue;
-
+	TMRLR0 = usReloadValue;    
+    
     /* prescaler 1:16, reload, interrupt enable, count enable, trigger */
-    TMCSR0 = 0x041B;
+    TMCSR0 = 0x041B;    
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick. */
 	prvSetupRLT0Interrupt();
@@ -437,18 +440,18 @@ void vPortEndScheduler( void )
 
 /*-----------------------------------------------------------*/
 
-/*
+/* 
  * The interrupt service routine used depends on whether the pre-emptive
  * scheduler is being used or not.
  */
 
 #if configUSE_PREEMPTION == 1
 
-	/*
+	/* 
 	 * Tick ISR for preemptive scheduler.  We can use a __nosavereg attribute
 	 * as the context is to be saved by the portSAVE_CONTEXT() macro, not the
-	 * compiler generated code.  The tick count is incremented after the context
-	 * is saved.
+	 * compiler generated code.  The tick count is incremented after the context 
+	 * is saved. 
 	 */
 	__nosavereg __interrupt void prvRLT0_TICKISR( void )
 	{
@@ -462,12 +465,14 @@ void vPortEndScheduler( void )
 		__EI();
 		
 		/* Clear RLT0 interrupt flag */
-		TMCSR0_UF = 0;
+		TMCSR0_UF = 0;      
 		
 		/* Increment the tick count then switch to the highest priority task
 		that is ready to run. */
-		vTaskIncrementTick();
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
 
 		/* Disable interrupts so that portRESTORE_CONTEXT() is not interrupted */
 		__DI();
@@ -489,9 +494,9 @@ void vPortEndScheduler( void )
 	__interrupt void prvRLT0_TICKISR( void )
 	{
 		/* Clear RLT0 interrupt flag */
-		TMCSR0_UF = 0;
+		TMCSR0_UF = 0;  
 		
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	}
 
 #endif
@@ -499,8 +504,8 @@ void vPortEndScheduler( void )
 /*-----------------------------------------------------------*/
 
 /*
- * Manual context switch. We can use a __nosavereg attribute  as the context
- * is to be saved by the portSAVE_CONTEXT() macro, not the compiler generated
+ * Manual context switch. We can use a __nosavereg attribute  as the context 
+ * is to be saved by the portSAVE_CONTEXT() macro, not the compiler generated 
  * code.
  */
 __nosavereg __interrupt void vPortYield( void )
@@ -517,8 +522,8 @@ __nosavereg __interrupt void vPortYield( void )
 /*-----------------------------------------------------------*/
 
 __nosavereg __interrupt void vPortYieldDelayed( void )
-{
-    /* Disable interrupts so that portSAVE_CONTEXT() is not interrupted */
+{    
+    /* Disable interrupts so that portSAVE_CONTEXT() is not interrupted */      
 	__DI();
 	
 	/* Save the context of the interrupted task. */
@@ -533,7 +538,7 @@ __nosavereg __interrupt void vPortYieldDelayed( void )
 	/* Switch to the highest priority task that is ready to run. */
 	vTaskSwitchContext();
 	
-	/* Disable interrupts so that portSAVE_CONTEXT() is not interrupted */
+	/* Disable interrupts so that portSAVE_CONTEXT() is not interrupted */   
 	__DI();
 	
 	/* Restore the context of the new task. */

@@ -1,73 +1,76 @@
 /*
-    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
-	
+    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+    All rights reserved
 
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-     *    Complete, revised, and edited pdf reference manuals are also       *
-     *    available.                                                         *
-     *                                                                       *
-     *    Purchasing FreeRTOS documentation will not only help you, by       *
-     *    ensuring you get running as quickly as possible and with an        *
-     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-     *    the FreeRTOS project to continue with its mission of providing     *
-     *    professional grade, cross platform, de facto standard solutions    *
-     *    for microcontrollers - completely free of charge!                  *
-     *                                                                       *
-     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-     *                                                                       *
-     *    Thank you for using FreeRTOS, and thank you for your support!      *
-     *                                                                       *
-    ***************************************************************************
-
+    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
-    distribute a combined work that includes FreeRTOS without being obliged to
-    provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    1 tab == 4 spaces!
+    ***************************************************************************
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
+    ***************************************************************************
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
+    link: http://www.freertos.org/a00114.html
 
     ***************************************************************************
      *                                                                       *
-     *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that is more than just the market leader, it     *
+     *    is the industry's de facto standard.                               *
      *                                                                       *
-     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *    Help yourself get started quickly while simultaneously helping     *
+     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
+     *    tutorial book, reference manual, or both:                          *
+     *    http://www.FreeRTOS.org/Documentation                              *
      *                                                                       *
     ***************************************************************************
 
+    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
+    the FAQ page "My application does not run, what could be wrong?".  Have you
+    defined configASSERT()?
 
-    http://www.FreeRTOS.org - Documentation, training, latest information,
-    license and contact details.
+    http://www.FreeRTOS.org/support - In return for receiving this top quality
+    embedded software for free we request you assist our global community by
+    participating in the support forum.
+
+    http://www.FreeRTOS.org/training - Investing in training allows your team to
+    be as productive as possible as early as possible.  Now you can receive
+    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
+    Ltd, and the world's leading authority on the world's leading RTOS.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool.
+    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+    compatible FAT file system, and our tiny thread aware UDP/IP stack.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
-    the code with commercial support, indemnification, and middleware, under
-    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under
-    the SafeRTOS brand: http://www.SafeRTOS.com.
+    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
+    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
+    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and commercial middleware.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
+    mission critical applications that require provable dependability.
+
+    1 tab == 4 spaces!
 */
 
-/*
+/* 
 Changes between V1.2.4 and V1.2.5
 
-	+ Introduced portGLOBAL_INTERRUPT_FLAG definition to test the global
+	+ Introduced portGLOBAL_INTERRUPT_FLAG definition to test the global 
 	  interrupt flag setting.  Using the two bits defined within
 	  portINITAL_INTERRUPT_STATE was causing the w register to get clobbered
 	  before the test was performed.
@@ -81,7 +84,7 @@ Changes from V2.1.1
 
 	+ PCLATU and PCLATH are now saved as part of the context.  This allows
 	  function pointers to be used within tasks.  Thanks to Javier Espeche
-	  for the enhancement.
+	  for the enhancement. 
 
 Changes from V2.3.1
 
@@ -105,7 +108,7 @@ Changes from V3.2.0
  *----------------------------------------------------------*/
 
 /* Hardware setup for tick. */
-#define portTIMER_FOSC_SCALE			( ( unsigned long ) 4 )
+#define portTIMER_FOSC_SCALE			( ( uint32_t ) 4 )
 
 /* Initial interrupt enable state for newly created tasks.  This value is
 copied into INTCON when a task switches in for the first time. */
@@ -114,24 +117,24 @@ copied into INTCON when a task switches in for the first time. */
 /* Just the bit within INTCON for the global interrupt flag. */
 #define portGLOBAL_INTERRUPT_FLAG			0x80
 
-/* Constant used for context switch macro when we require the interrupt
+/* Constant used for context switch macro when we require the interrupt 
 enable state to be unchanged when the interrupted task is switched back in. */
 #define portINTERRUPTS_UNCHANGED			0x00
 
 /* Some memory areas get saved as part of the task context.  These memory
-area's get used by the compiler for temporary storage, especially when
+area's get used by the compiler for temporary storage, especially when 
 performing mathematical operations, or when using 32bit data types.  This
 constant defines the size of memory area which must be saved. */
-#define portCOMPILER_MANAGED_MEMORY_SIZE	( ( unsigned char ) 0x13 )
+#define portCOMPILER_MANAGED_MEMORY_SIZE	( ( uint8_t ) 0x13 )
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /* IO port constants. */
-#define portBIT_SET		( ( unsigned char ) 1 )
-#define portBIT_CLEAR	( ( unsigned char ) 0 )
+#define portBIT_SET		( ( uint8_t ) 1 )
+#define portBIT_CLEAR	( ( uint8_t ) 0 )
 
 /*
  * The serial port ISR's are defined in serial.c, but are called from portable
@@ -145,7 +148,7 @@ void vSerialRxISR( void );
  */
 static void prvSetupTimerInterrupt( void );
 
-/*
+/* 
  * ISR to maintain the tick, and perform tick context switches if the
  * preemptive scheduler is being used.
  */
@@ -157,13 +160,13 @@ static void prvTickISR( void );
  */
 static void prvLowInterrupt( void );
 
-/*
+/* 
  * Macro that pushes all the registers that make up the context of a task onto
  * the stack, then saves the new top of stack into the TCB.
- *
- * If this is called from an ISR then the interrupt enable bits must have been
+ * 
+ * If this is called from an ISR then the interrupt enable bits must have been 
  * set for the ISR to ever get called.  Therefore we want to save the INTCON
- * register with the enable bits forced to be set - and ucForcedInterruptFlags
+ * register with the enable bits forced to be set - and ucForcedInterruptFlags 
  * must contain these bit settings.  This means the interrupts will again be
  * enabled when the interrupted task is switched back in.
  *
@@ -176,10 +179,10 @@ static void prvLowInterrupt( void );
  * storage during math and other computations.  This is especially true if
  * 32bit data types are utilised (as they are by the scheduler).  The .tmpdata
  * and MATH_DATA sections have to be stored in there entirety as part of a task
- * context.  This macro stores from data address 0x00 to
- * portCOMPILER_MANAGED_MEMORY_SIZE.  This is sufficient for the demo
- * applications but you should check the map file for your project to ensure
- * this is sufficient for your needs.  It is not clear whether this size is
+ * context.  This macro stores from data address 0x00 to 
+ * portCOMPILER_MANAGED_MEMORY_SIZE.  This is sufficient for the demo 
+ * applications but you should check the map file for your project to ensure 
+ * this is sufficient for your needs.  It is not clear whether this size is 
  * fixed for all compilations or has the potential to be program specific.
  */
 #define	portSAVE_CONTEXT( ucForcedInterruptFlags )								\
@@ -244,7 +247,7 @@ static void prvLowInterrupt( void );
 	_endasm																		\
 																				\
 		/* Store each address from the hardware stack. */						\
-		while( STKPTR > ( unsigned char ) 0 )								\
+		while( STKPTR > ( uint8_t ) 0 )								\
 		{																		\
 			_asm																\
 				MOVFF	TOSL, PREINC1											\
@@ -378,15 +381,15 @@ static void prvLowInterrupt( void );
 }
 /*-----------------------------------------------------------*/
 
-/*
- * See header file for description.
+/* 
+ * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
-unsigned long ulAddress;
-unsigned char ucBlock;
+uint32_t ulAddress;
+uint8_t ucBlock;
 
-	/* Place a few bytes of known values on the bottom of the stack.
+	/* Place a few bytes of known values on the bottom of the stack. 
 	This is just useful for debugging. */
 
 	*pxTopOfStack = 0x11;
@@ -398,121 +401,121 @@ unsigned char ucBlock;
 
 
 	/* Simulate how the stack would look after a call to vPortYield() generated
-	by the compiler.
+	by the compiler. 
 
 	First store the function parameters.  This is where the task will expect to
 	find them when it starts running. */
-	ulAddress = ( unsigned long ) pvParameters;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	ulAddress = ( uint32_t ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 
 	ulAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 
 	/* Next we just leave a space.  When a context is saved the stack pointer
 	is incremented before it is used so as not to corrupt whatever the stack
-	pointer is actually pointing to.  This is especially necessary during
+	pointer is actually pointing to.  This is especially necessary during 
 	function epilogue code generated by the compiler. */
 	*pxTopOfStack = 0x44;
 	pxTopOfStack++;
 
 	/* Next are all the registers that form part of the task context. */
 	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x66; /* WREG. */
+	*pxTopOfStack = ( StackType_t ) 0x66; /* WREG. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xcc; /* Status. */
+	*pxTopOfStack = ( StackType_t ) 0xcc; /* Status. */
 	pxTopOfStack++;
 
 	/* INTCON is saved with interrupts enabled. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portINITAL_INTERRUPT_STATE; /* INTCON */
+	*pxTopOfStack = ( StackType_t ) portINITAL_INTERRUPT_STATE; /* INTCON */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11; /* BSR. */
+	*pxTopOfStack = ( StackType_t ) 0x11; /* BSR. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x22; /* FSR2L. */
+	*pxTopOfStack = ( StackType_t ) 0x22; /* FSR2L. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x33; /* FSR2H. */
+	*pxTopOfStack = ( StackType_t ) 0x33; /* FSR2H. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x44; /* FSR0L. */
+	*pxTopOfStack = ( StackType_t ) 0x44; /* FSR0L. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x55; /* FSR0H. */
+	*pxTopOfStack = ( StackType_t ) 0x55; /* FSR0H. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x66; /* TABLAT. */
+	*pxTopOfStack = ( StackType_t ) 0x66; /* TABLAT. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00; /* TBLPTRU. */
+	*pxTopOfStack = ( StackType_t ) 0x00; /* TBLPTRU. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x88; /* TBLPTRUH. */
+	*pxTopOfStack = ( StackType_t ) 0x88; /* TBLPTRUH. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x99; /* TBLPTRUL. */
+	*pxTopOfStack = ( StackType_t ) 0x99; /* TBLPTRUL. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xaa; /* PRODH. */
+	*pxTopOfStack = ( StackType_t ) 0xaa; /* PRODH. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xbb; /* PRODL. */
+	*pxTopOfStack = ( StackType_t ) 0xbb; /* PRODL. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00; /* PCLATU. */
+	*pxTopOfStack = ( StackType_t ) 0x00; /* PCLATU. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00; /* PCLATH. */
+	*pxTopOfStack = ( StackType_t ) 0x00; /* PCLATH. */
 	pxTopOfStack++;
 
 	/* Next the .tmpdata and MATH_DATA sections. */
 	for( ucBlock = 0; ucBlock <= portCOMPILER_MANAGED_MEMORY_SIZE; ucBlock++ )
 	{
-		*pxTopOfStack = ( portSTACK_TYPE ) ucBlock;
+		*pxTopOfStack = ( StackType_t ) ucBlock;
 		*pxTopOfStack++;
 	}
 
 	/* Store the top of the global data section. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portCOMPILER_MANAGED_MEMORY_SIZE; /* Low. */
+	*pxTopOfStack = ( StackType_t ) portCOMPILER_MANAGED_MEMORY_SIZE; /* Low. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00; /* High. */
+	*pxTopOfStack = ( StackType_t ) 0x00; /* High. */
 	pxTopOfStack++;
 
-	/* The only function return address so far is the address of the
+	/* The only function return address so far is the address of the 
 	task. */
-	ulAddress = ( unsigned long ) pxCode;
+	ulAddress = ( uint32_t ) pxCode;
 
 	/* TOS low. */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 	ulAddress >>= 8;
 
 	/* TOS high. */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 	ulAddress >>= 8;
 
 	/* TOS even higher. */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 
 	/* Store the number of return addresses on the hardware stack - so far only
 	the address of the task entry point. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 1;
+	*pxTopOfStack = ( StackType_t ) 1;
 	pxTopOfStack++;
 
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup a timer for the tick ISR is using the preemptive scheduler. */
-	prvSetupTimerInterrupt();
+	prvSetupTimerInterrupt(); 
 
 	/* Restore the context of the first task to run. */
 	portRESTORE_CONTEXT();
@@ -528,7 +531,7 @@ portBASE_TYPE xPortStartScheduler( void )
 void vPortEndScheduler( void )
 {
 	/* It is unlikely that the scheduler for the PIC port will get stopped
-	once running.  If required disable the tick interrupt here, then return
+	once running.  If required disable the tick interrupt here, then return 
 	to xPortStartScheduler(). */
 }
 /*-----------------------------------------------------------*/
@@ -591,26 +594,23 @@ static void prvLowInterrupt( void )
 
 /*
  * ISR for the tick.
- * This increments the tick count and, if using the preemptive scheduler,
- * performs a context switch.  This must be identical to the manual
- * context switch in how it stores the context of a task.
+ * This increments the tick count and, if using the preemptive scheduler, 
+ * performs a context switch.  This must be identical to the manual 
+ * context switch in how it stores the context of a task. 
  */
 static void prvTickISR( void )
 {
-	/* Interrupts must have been enabled for the ISR to fire, so we have to
+	/* Interrupts must have been enabled for the ISR to fire, so we have to 
 	save the context with interrupts enabled. */
 	portSAVE_CONTEXT( portGLOBAL_INTERRUPT_FLAG );
 	PIR1bits.CCP1IF = 0;
 
 	/* Maintain the tick count. */
-	vTaskIncrementTick();
-
-	#if configUSE_PREEMPTION == 1
+	if( xTaskIncrementTick() != pdFALSE )
 	{
 		/* Switch to the highest priority task that is ready to run. */
 		vTaskSwitchContext();
 	}
-	#endif
 
 	portRESTORE_CONTEXT();
 }
@@ -621,9 +621,9 @@ static void prvTickISR( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned long ulConstCompareValue = ( ( configCPU_CLOCK_HZ / portTIMER_FOSC_SCALE ) / configTICK_RATE_HZ );
-unsigned long ulCompareValue;
-unsigned char ucByte;
+const uint32_t ulConstCompareValue = ( ( configCPU_CLOCK_HZ / portTIMER_FOSC_SCALE ) / configTICK_RATE_HZ );
+uint32_t ulCompareValue;
+uint8_t ucByte;
 
 	/* Interrupts are disabled when this function is called.
 
@@ -631,14 +631,14 @@ unsigned char ucByte;
 	1.
 
 	Clear the time count then setup timer. */
-	TMR1H = ( unsigned char ) 0x00;
-	TMR1L = ( unsigned char ) 0x00;
+	TMR1H = ( uint8_t ) 0x00;
+	TMR1L = ( uint8_t ) 0x00;
 
 	/* Set the compare match value. */
 	ulCompareValue = ulConstCompareValue;
-	CCPR1L = ( unsigned char ) ( ulCompareValue & ( unsigned long ) 0xff );
-	ulCompareValue >>= ( unsigned long ) 8;
-	CCPR1H = ( unsigned char ) ( ulCompareValue & ( unsigned long ) 0xff );	
+	CCPR1L = ( uint8_t ) ( ulCompareValue & ( uint32_t ) 0xff );
+	ulCompareValue >>= ( uint32_t ) 8;
+	CCPR1H = ( uint8_t ) ( ulCompareValue & ( uint32_t ) 0xff );	
 
 	CCP1CONbits.CCP1M0 = portBIT_SET;	/*< Compare match mode. */
 	CCP1CONbits.CCP1M1 = portBIT_SET;	/*< Compare match mode. */

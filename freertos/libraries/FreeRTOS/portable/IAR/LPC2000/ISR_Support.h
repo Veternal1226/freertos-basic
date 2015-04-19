@@ -1,5 +1,6 @@
 ;/*
-;    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
+;    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+;    All rights reserved
 ;
 ;
 ;    ***************************************************************************
@@ -86,7 +87,7 @@ portSAVE_CONTEXT MACRO
 	MRS		R0, SPSR
 	STMDB	LR!, {R0}
 
-	LDR		R0, =ulCriticalNesting
+	LDR		R0, =ulCriticalNesting 
 	LDR		R0, [R0]
 	STMDB	LR!, {R0}
 

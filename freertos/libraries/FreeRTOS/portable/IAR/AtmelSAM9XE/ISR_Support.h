@@ -34,7 +34,7 @@ portSAVE_CONTEXT MACRO
 	MRS		R0, SPSR
 	STMDB	LR!, {R0}
 
-	LDR		R0, =ulCriticalNesting
+	LDR		R0, =ulCriticalNesting 
 	LDR		R0, [R0]
 	STMDB	LR!, {R0}
 

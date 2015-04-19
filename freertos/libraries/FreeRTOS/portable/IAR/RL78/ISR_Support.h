@@ -1,5 +1,6 @@
 ;/*
-;    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
+;    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+;    All rights reserved
 ;	
 ;
 ;    ***************************************************************************
@@ -61,7 +62,7 @@
 
 ;------------------------------------------------------------------------------
 ;   portSAVE_CONTEXT MACRO
-;   Saves the context of the general purpose registers, CS and ES (only in far
+;   Saves the context of the general purpose registers, CS and ES (only in far 
 ;	memory mode) registers the usCriticalNesting Value and the Stack Pointer
 ;   of the active Task onto the task stack
 ;------------------------------------------------------------------------------

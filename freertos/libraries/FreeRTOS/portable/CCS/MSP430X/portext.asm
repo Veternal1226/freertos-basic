@@ -1,7 +1,8 @@
 ;
 ;/*
-;    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
-;	
+;    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+;    All rights reserved
+;
 ;
 ;    ***************************************************************************
 ;     *                                                                       *
@@ -57,7 +58,7 @@
 
 	.include data_model.h
 
-	.global vTaskIncrementTick
+	.global xTaskIncrementTick
 	.global vTaskSwitchContext
 	.global vPortSetupTimerInterrupt
 	.global pxCurrentTCB
@@ -80,7 +81,7 @@ portSAVE_CONTEXT .macro
 	mov_x	sp, 0( r12 )
 	.endm
 ;-----------------------------------------------------------
-		
+
 portRESTORE_CONTEXT .macro
 
 	mov_x	&pxCurrentTCB, r12
@@ -88,12 +89,6 @@ portRESTORE_CONTEXT .macro
 	pop_x	r15
 	mov.w	r15, &usCriticalNesting
 	popm_x	#12, r15
-		
-	;The last thing on the stack will be the status register.
-    ;Ensure the power down bits are clear ready for the next
-    ;time this power down register is popped from the stack.
-	bic.w   #0xf0, 0( sp )
-		
 	pop.w	sr
 	ret_x
 	.endm
@@ -107,37 +102,37 @@ portRESTORE_CONTEXT .macro
 ;*
 ;* If the preemptive scheduler is in use a context switch can also occur.
 ;*/
-	
+
 	.text
 	.align 2
-	
+
 vPortPreemptiveTickISR: .asmfunc
-	
+
 	; The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
 	;to save it manually before it gets modified (interrupts get disabled).
 	push.w sr
 	portSAVE_CONTEXT
-				
-	call_x	#vTaskIncrementTick
+
+	call_x	#xTaskIncrementTick
 	call_x	#vTaskSwitchContext
-		
+
 	portRESTORE_CONTEXT
 	.endasmfunc
 ;-----------------------------------------------------------
 
 	.align 2
-	
+
 vPortCooperativeTickISR: .asmfunc
-	
+
 	; The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
 	;to save it manually before it gets modified (interrupts get disabled).
 	push.w sr
 	portSAVE_CONTEXT
-				
-	call_x	#vTaskIncrementTick
-		
+
+	call_x	#xTaskIncrementTick
+
 	portRESTORE_CONTEXT
-	
+
 	.endasmfunc
 ;-----------------------------------------------------------
 
@@ -151,16 +146,16 @@ vPortYield: .asmfunc
 
 	; The sr needs saving before it is modified.
 	push.w	sr
-	
+
 	; Now the SR is stacked we can disable interrupts.
-	dint	
+	dint
 	nop
-				
+
 	; Save the context of the current task.
-	portSAVE_CONTEXT			
+	portSAVE_CONTEXT
 
 	; Select the next task to run.
-	call_x	#vTaskSwitchContext		
+	call_x	#vTaskSwitchContext
 
 	; Restore the context of the new task.
 	portRESTORE_CONTEXT
@@ -174,7 +169,7 @@ vPortYield: .asmfunc
 ;
 
 	.align 2
-	
+
 xPortStartScheduler: .asmfunc
 
 	; Setup the hardware to generate the tick.  Interrupts are disabled
@@ -185,6 +180,6 @@ xPortStartScheduler: .asmfunc
 	portRESTORE_CONTEXT
 	.endasmfunc
 ;-----------------------------------------------------------
-      		
+
 	.end
-		
+

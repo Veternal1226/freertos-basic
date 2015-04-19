@@ -1,67 +1,70 @@
 /*
-    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
-	
+    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+    All rights reserved
 
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-     *    Complete, revised, and edited pdf reference manuals are also       *
-     *    available.                                                         *
-     *                                                                       *
-     *    Purchasing FreeRTOS documentation will not only help you, by       *
-     *    ensuring you get running as quickly as possible and with an        *
-     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-     *    the FreeRTOS project to continue with its mission of providing     *
-     *    professional grade, cross platform, de facto standard solutions    *
-     *    for microcontrollers - completely free of charge!                  *
-     *                                                                       *
-     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-     *                                                                       *
-     *    Thank you for using FreeRTOS, and thank you for your support!      *
-     *                                                                       *
-    ***************************************************************************
-
+    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
-    distribute a combined work that includes FreeRTOS without being obliged to
-    provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    1 tab == 4 spaces!
+    ***************************************************************************
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
+    ***************************************************************************
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
+    link: http://www.freertos.org/a00114.html
 
     ***************************************************************************
      *                                                                       *
-     *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that is more than just the market leader, it     *
+     *    is the industry's de facto standard.                               *
      *                                                                       *
-     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *    Help yourself get started quickly while simultaneously helping     *
+     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
+     *    tutorial book, reference manual, or both:                          *
+     *    http://www.FreeRTOS.org/Documentation                              *
      *                                                                       *
     ***************************************************************************
 
+    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
+    the FAQ page "My application does not run, what could be wrong?".  Have you
+    defined configASSERT()?
 
-    http://www.FreeRTOS.org - Documentation, training, latest information,
-    license and contact details.
+    http://www.FreeRTOS.org/support - In return for receiving this top quality
+    embedded software for free we request you assist our global community by
+    participating in the support forum.
+
+    http://www.FreeRTOS.org/training - Investing in training allows your team to
+    be as productive as possible as early as possible.  Now you can receive
+    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
+    Ltd, and the world's leading authority on the world's leading RTOS.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool.
+    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+    compatible FAT file system, and our tiny thread aware UDP/IP stack.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
-    the code with commercial support, indemnification, and middleware, under
-    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under
-    the SafeRTOS brand: http://www.SafeRTOS.com.
+    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
+    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
+    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and commercial middleware.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
+    mission critical applications that require provable dependability.
+
+    1 tab == 4 spaces!
 */
 
 /* Scheduler includes. */
@@ -105,7 +108,7 @@ configINSTALL_EXCEPTION_HANDLERS is not set to 1. */
 
 /* This variable is set in the exception entry code, before
 vPortExceptionHandler is called. */
-unsigned long *pulStackPointerOnFunctionEntry = NULL;
+uint32_t *pulStackPointerOnFunctionEntry = NULL;
 
 /* This is the structure that is filled with the MicroBlaze context as it
 existed immediately prior to the exception occurrence.  A pointer to this
@@ -144,7 +147,7 @@ extern void *pxCurrentTCB;
 
 	/* Fill an xPortRegisterDump structure with the MicroBlaze context as it
 	was immediately before the exception occurrence. */
-	
+
 	/* First fill in the name and handle of the task that was in the Running
 	state when the exception occurred. */
 	xRegisterDump.xCurrentTaskHandle = pxCurrentTCB;
@@ -168,7 +171,7 @@ extern void *pxCurrentTCB;
 	xRegisterDump.ulR18 = pulStackPointerOnFunctionEntry[ portexR18_STACK_OFFSET ];
 	xRegisterDump.ulR19 = pulStackPointerOnFunctionEntry[ portexR19_STACK_OFFSET ];
 	xRegisterDump.ulMSR = pulStackPointerOnFunctionEntry[ portexMSR_STACK_OFFSET ];
-	
+
 	/* Obtain the value of all other registers. */
 	xRegisterDump.ulR2_small_data_area = mfgpr( R2 );
 	xRegisterDump.ulR13_read_write_small_data_area = mfgpr( R13 );
@@ -187,17 +190,17 @@ extern void *pxCurrentTCB;
 	xRegisterDump.ulR29 = mfgpr( R29 );
 	xRegisterDump.ulR30 = mfgpr( R30 );
 	xRegisterDump.ulR31 = mfgpr( R31 );
-	xRegisterDump.ulR1_SP = ( ( unsigned long ) pulStackPointerOnFunctionEntry ) + portexASM_HANDLER_STACK_FRAME_SIZE;
+	xRegisterDump.ulR1_SP = ( ( uint32_t ) pulStackPointerOnFunctionEntry ) + portexASM_HANDLER_STACK_FRAME_SIZE;
 	xRegisterDump.ulEAR = mfear();
 	xRegisterDump.ulESR = mfesr();
 	xRegisterDump.ulEDR = mfedr();
-	
+
 	/* Move the saved program counter back to the instruction that was executed
 	when the exception occurred.  This is only valid for certain types of
 	exception. */
 	xRegisterDump.ulPC = xRegisterDump.ulR17_return_address_from_exceptions - portexINSTRUCTION_SIZE;
 
-	#if XPAR_MICROBLAZE_0_USE_FPU == 1
+	#if XPAR_MICROBLAZE_0_USE_FPU != 0
 	{
 		xRegisterDump.ulFSR = mffsr();
 	}
@@ -210,40 +213,40 @@ extern void *pxCurrentTCB;
 	/* Also fill in a string that describes what type of exception this is.
 	The string uses the same ID names as defined in the MicroBlaze standard
 	library exception header files. */
-	switch( ( unsigned long ) pvExceptionID )
+	switch( ( uint32_t ) pvExceptionID )
 	{
 		case XEXC_ID_FSL :
-				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_FSL";
+				xRegisterDump.pcExceptionCause = ( int8_t * const ) "XEXC_ID_FSL";
 				break;
 
 		case XEXC_ID_UNALIGNED_ACCESS :
-				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_UNALIGNED_ACCESS";
+				xRegisterDump.pcExceptionCause = ( int8_t * const ) "XEXC_ID_UNALIGNED_ACCESS";
 				break;
 
 		case XEXC_ID_ILLEGAL_OPCODE :
-				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_ILLEGAL_OPCODE";
+				xRegisterDump.pcExceptionCause = ( int8_t * const ) "XEXC_ID_ILLEGAL_OPCODE";
 				break;
 
 		case XEXC_ID_M_AXI_I_EXCEPTION :
-				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_M_AXI_I_EXCEPTION or XEXC_ID_IPLB_EXCEPTION";
+				xRegisterDump.pcExceptionCause = ( int8_t * const ) "XEXC_ID_M_AXI_I_EXCEPTION or XEXC_ID_IPLB_EXCEPTION";
 				break;
 
 		case XEXC_ID_M_AXI_D_EXCEPTION :
-				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_M_AXI_D_EXCEPTION or XEXC_ID_DPLB_EXCEPTION";
+				xRegisterDump.pcExceptionCause = ( int8_t * const ) "XEXC_ID_M_AXI_D_EXCEPTION or XEXC_ID_DPLB_EXCEPTION";
 				break;
 
 		case XEXC_ID_DIV_BY_ZERO :
-				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_DIV_BY_ZERO";
+				xRegisterDump.pcExceptionCause = ( int8_t * const ) "XEXC_ID_DIV_BY_ZERO";
 				break;
 
 		case XEXC_ID_STACK_VIOLATION :
-				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_STACK_VIOLATION or XEXC_ID_MMU";
+				xRegisterDump.pcExceptionCause = ( int8_t * const ) "XEXC_ID_STACK_VIOLATION or XEXC_ID_MMU";
 				break;
 
-		#if XPAR_MICROBLAZE_0_USE_FPU == 1
+		#if XPAR_MICROBLAZE_0_USE_FPU != 0
 
 			case XEXC_ID_FPU :
-						xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_FPU see ulFSR value";
+						xRegisterDump.pcExceptionCause = ( int8_t * const ) "XEXC_ID_FPU see ulFSR value";
 						break;
 
 		#endif /* XPAR_MICROBLAZE_0_USE_FPU */
@@ -266,7 +269,7 @@ extern void *pxCurrentTCB;
 
 void vPortExceptionsInstallHandlers( void )
 {
-static unsigned long ulHandlersAlreadyInstalled = pdFALSE;
+static uint32_t ulHandlersAlreadyInstalled = pdFALSE;
 
 	if( ulHandlersAlreadyInstalled == pdFALSE )
 	{
