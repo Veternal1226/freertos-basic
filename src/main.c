@@ -110,7 +110,7 @@ void command_prompt(void *pvParameters)
 
 void system_logger(void *pvParameters)
 {
-    signed char buf[128];
+    char buf[128];
     char output[512] = {0};
     char *tag = "\nName          State   Priority  Stack  Num\n*******************************************\n";
     int handle, error;
@@ -168,7 +168,7 @@ int main()
     register_devfs();
 	/* Create a task to output text read from romfs. */
 	xTaskCreate(command_prompt,
-	            (signed portCHAR *) "CLI",
+	            (portCHAR *) "CLI",
 	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
 
 #if 0
