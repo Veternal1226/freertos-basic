@@ -9,3 +9,7 @@ test-romfs.bin
 build
 output
 tags
+/visualizer/log
+/visualizer/cost
+/visualizer/times
+/visualizer/out/

@@ -1,15 +1,29 @@
 A FreeRTOS distribution for STM32-P103 with customized features
 
-Contributors:
+Contributors
+===
   Zhe-An Lin <xq5530303@gmail.com>
   Jim Huang <jserv.tw@gmail.com>
   Tim Hsu <tim37021@gmail.com>                                                  
   Jeff Liaw <rampant1018@gmail.com>
   Eddy Wu <yukkcake@gmail.com>
+  Veck Hsiao <fbukevin@gmail.com>
+  Sirius Wang <larrywhy.tw@gmail.com>
 
-External source from FreeRTOS is copyrighted by:
+External source from FreeRTOS is copyrighted by
+===
   Real Time Engineers Ltd.
 
-External source from CMSIS/ST is copyrighted by:
+External source from CMSIS/ST is copyrighted by
+===
   STMicroelectronics
   ARM Ltd
+
+Current FreeRTOS kernel version
+===
+  v8.2.1
+
+Visualization
+===
+In this project, we adopt Python visualization library - ![matplotlib](http://matplotlib.org/) to implement profiling visualization such as context switch, interrrupt latency, system call overhead ...etc. Currently, some python modules for visualization are available in directory "visualizer". No matter you use `python <module>.py`(if log file exists) to run visualizer or use `make qemuauto` to run emulation and visualizer, you should install matplotlib first. You can use `pip install matplotlib` or follow the instruction ![here](http://matplotlib.org/faq/installing_faq.html) to skin a cat.
+  
