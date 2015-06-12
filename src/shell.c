@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <stdlib.h>
 #include <stddef.h>
 #include "clib.h"
 #include <string.h>
@@ -8,6 +9,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "host.h"
+
+#include "mouse.h"
 
 typedef struct {
 	const char *name;
@@ -24,8 +27,8 @@ void help_command(int, char **);
 void host_command(int, char **);
 void mmtest_command(int, char **);
 void test_command(int, char **);
+void mouse_command(int, char **);
 void _command(int, char **);
-
 #define MKCL(n, d) {.name=#n, .fptr=n ## _command, .desc=d}
 
 cmdlist cl[]={
@@ -37,9 +40,12 @@ cmdlist cl[]={
 	MKCL(mmtest, "heap memory allocation test"),
 	MKCL(help, "help"),
 	MKCL(test, "test new function"),
+	MKCL(mouse, "mouse escape"),
 	MKCL(, ""),
 };
 
+/* mouse path method */
+/* shell command */
 int parse_command(char *str, char *argv[]){
 	int b_quote=0, b_dbquote=0;
 	int i;
@@ -60,7 +66,22 @@ int parse_command(char *str, char *argv[]){
 
 	return count;
 }
+/*
+ * mouse command
+ */
+void mouse_command(int n, char * argv[]){
+    int maze[MSIZE][MSIZE]={{1,1,1,1,1,1,1},
+                          {1,0,0,0,1,1,1},
+                          {1,0,1,0,1,0,1},
+                          {1,0,0,0,1,0,1},
+                          {1,0,1,0,1,0,1},
+                          {1,0,1,0,0,0,1},
+                          {1,1,1,1,1,1,1}};
+    mShowMap(maze);
+    //MSTACK mstack[(MSIZE-1)*(MSIZE-1)];
+    mVisit(maze);
 
+}
 void ls_command(int n, char *argv[]){
     fio_printf(1,"\r\n"); 
     int dir;
