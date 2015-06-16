@@ -15,6 +15,7 @@
 int logfile = 0;
 
 int syscall(int number, ...) __attribute__((naked));
+void calculate_ct(void *);
 
 int open(const char *pathname, int flags);
 int close(int fildes);
@@ -220,6 +221,8 @@ int main()
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
 	serial_rx_queue = xQueueCreate(1, sizeof(serial_ch_msg));
 
+
+        #if 0
 	/* Create a task to flash the LED. */
 	xTaskCreate(led_flash_task,
 	            (signed portCHAR *) "LED Flash",
@@ -247,7 +250,13 @@ int main()
 	            (signed portCHAR *) "Serial Read/Write",
 	            512 /* stack size */, NULL,
 	            tskIDLE_PRIORITY + 10, NULL);
+        #endif 
 
+       xTaskCreate(calculate_ct,
+                    (signed portCHAR *) "calculate ct",
+                    512 /* stack size */, NULL,
+                    tskIDLE_PRIORITY + 5, NULL);
+ 
 	/* Start running the tasks. */
 	vTaskStartScheduler();
 
@@ -260,12 +269,14 @@ void vApplicationTickHook()
 
 void vApplicationIdleHook(void)
 {
+        #if 0
 	send_byte('i');
 	send_byte('d');
 	send_byte('l');
 	send_byte('e');
 	send_byte('\n');
 	send_byte('\r');
+        #endif
 }
 
 int _snprintf_int(int num, char *buf, int buf_size)
@@ -313,6 +324,22 @@ unsigned int get_time()
 	return xTaskGetTickCount() * scale +
 	       (*reload - *current) / (*reload / scale);
 }
+
+void calculate_ct(void *pvParameters)
+{
+    int i = 0; // for calculate the context switching purpose
+    //fio_printf(1,"%d!\n",get_time());
+	//send_byte('i');
+    for(; i < 100; i++)
+    {
+        //fio_printf(1,"task!\n");
+	send_byte('i');
+        vTaskDelay(1000 / portTICK_RATE_MS);
+    }
+
+    vTaskDelete(NULL);
+}
+
 
 int get_interrupt_priority(int interrupt)
 {
