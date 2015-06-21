@@ -9,7 +9,9 @@ test-romfs.bin
 build
 output
 tags
+Makefile_old
 /visualizer/log
 /visualizer/cost
 /visualizer/times
 /visualizer/out/
+old/
