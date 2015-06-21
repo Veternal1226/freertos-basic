@@ -1,113 +1,192 @@
-/**
-  ******************************************************************************
-  * @file    Template/main.c 
-  * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    20-September-2013
-  * @brief   Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT 2013 STMicroelectronics</center></h2>
-  *
-  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
-  * You may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at:
-  *
-  *        http://www.st.com/software_license_agreement_liberty_v2
-  *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
-  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  * See the License for the specific language governing permissions and
-  * limitations under the License.
-  *
-  ******************************************************************************
-  */
-
-/* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "game.h"
-
+//#define USE_STDPERIPH_DRIVER
+//#include "stm32f10x.h"
+//#include "stm32_p103.h"
+/* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "queue.h"
+#include "semphr.h"
 #include <string.h>
-/** @addtogroup Template
-  * @{
-  */ 
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-extern uint8_t demoMode;
+/* Filesystem includes */
+#include "filesystem.h"
+#include "fio.h"
+#include "romfs.h"
 
-void
-prvInit()
+#include "clib.h"
+#include "shell.h"
+#include "host.h"
+
+/* _sromfs symbol can be found in main.ld linker script
+ * it contains file system structure of test_romfs directory
+ */
+extern const unsigned char _sromfs;
+
+//static void setup_hardware();
+
+volatile xSemaphoreHandle serial_tx_wait_sem = NULL;
+/* Add for serial input */
+volatile xQueueHandle serial_rx_queue = NULL;
+
+/* IRQ handler to handle USART2 interruptss (both transmit and receive
+ * interrupts). */
+void USART2_IRQHandler()
 {
-	//LCD init
-	LCD_Init();
-	IOE_Config();
-	LTDC_Cmd( ENABLE );
+#if 0
+	static signed portBASE_TYPE xHigherPriorityTaskWoken;
 
-	LCD_LayerInit();
-	LCD_SetLayer( LCD_FOREGROUND_LAYER );
-	LCD_Clear( LCD_COLOR_BLACK );
-	LCD_SetTextColor( LCD_COLOR_WHITE );
+	/* If this interrupt is for a transmit... */
+	if (USART_GetITStatus(USART2, USART_IT_TXE) != RESET) {
+		/* "give" the serial_tx_wait_sem semaphore to notfiy processes
+		 * that the buffer has a spot free for the next byte.
+		 */
+		xSemaphoreGiveFromISR(serial_tx_wait_sem, &xHigherPriorityTaskWoken);
 
-	//Button
-	STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_GPIO );
+		/* Diables the transmit interrupt. */
+		USART_ITConfig(USART2, USART_IT_TXE, DISABLE);
+		/* If this interrupt is for a receive... */
+	}else if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET){
+		char msg = USART_ReceiveData(USART2);
 
-	//LED
-	STM_EVAL_LEDInit( LED3 );
-}
-
-static void GameEventTask1( void *pvParameters )
-{
-	while( 1 ){
-		GAME_EventHandler1();
+		/* If there is an error when queueing the received byte, freeze! */
+		if(!xQueueSendToBackFromISR(serial_rx_queue, &msg, &xHigherPriorityTaskWoken))
+			while(1);
 	}
-}
-
-static void GameEventTask2( void *pvParameters )
-{
-	while( 1 ){
-		GAME_EventHandler2();
+	else {
+		/* Only transmit and receive interrupts should be enabled.
+		 * If this is another type of interrupt, freeze.
+		 */
+		while(1);
 	}
-}
 
-static void GameEventTask3( void *pvParameters )
-{
-	while( 1 ){
-		GAME_EventHandler3();
+	if (xHigherPriorityTaskWoken) {
+		taskYIELD();
 	}
+#endif
 }
 
-static void GameTask( void *pvParameters )
+void send_byte(char ch)
 {
-	while( 1 ){
-		GAME_Update();
-		GAME_Render();
-		vTaskDelay( 10 );
+	/* Wait until the RS232 port can receive another byte (this semaphore
+	 * is "given" by the RS232 port interrupt when the buffer has room for
+	 * another byte.
+	 */
+	while (!xSemaphoreTake(serial_tx_wait_sem, portMAX_DELAY));
+
+	/* Send the byte and enable the transmit interrupt (it is disabled by
+	 * the interrupt).
+	 */
+	//USART_SendData(USART2, ch);
+	//USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
+}
+
+char recv_byte()
+{
+	//USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+	char msg;
+	while(!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
+	return msg;
+}
+void command_prompt(void *pvParameters)
+{
+	char buf[128];
+	char *argv[20];
+    	//char hint[] = USER_NAME "@" USER_NAME "-STM32:~$ ";
+	char hint[] = "Justinsanity";
+
+	fio_printf(1, "\rWelcome to FreeRTOS Shell\r\n");
+	while(1){
+                fio_printf(1, "%s", hint);
+		fio_read(0, buf, 127);
+	
+		int n=parse_command(buf, argv);
+
+		/* will return pointer to the command function */
+		cmdfunc *fptr=do_command(argv[0]);
+		if(fptr!=NULL)
+			fptr(n, argv);
+		else
+			fio_printf(2, "\r\n\"%s\" command not found.\r\n", argv[0]);
 	}
+
 }
 
-//Main Function
-int main(void)
+void system_logger(void *pvParameters)
 {
-	prvInit();
+    char buf[128];
+    char output[512] = {0};
+    char *tag = "\nName          State   Priority  Stack  Num\n*******************************************\n";
+    int handle, error;
+    const portTickType xDelay = 100000 / 100;
 
-	if( STM_EVAL_PBGetState( BUTTON_USER ) )
-		demoMode = 1;
+    handle = host_action(SYS_OPEN, "output/syslog", 4);
+    if(handle == -1) {
+        fio_printf(1, "Open file error!\n");
+        return;
+    }
 
-	xTaskCreate( GameTask, (signed char*) "GameTask", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
-	xTaskCreate( GameEventTask1, (signed char*) "GameEventTask1", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
-	xTaskCreate( GameEventTask2, (signed char*) "GameEventTask2", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
-	xTaskCreate( GameEventTask3, (signed char*) "GameEventTask3", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
+    while(1) {
+        memcpy(output, tag, strlen(tag));
+        error = host_action(SYS_WRITE, handle, (void *)output, strlen(output));
+        if(error != 0) {
+            fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
+            host_action(SYS_CLOSE, handle);
+            return;
+        }
+        vTaskList(buf);
 
-	//Call Scheduler
+        memcpy(output, (char *)(buf + 2), strlen((char *)buf) - 2);
+
+        error = host_action(SYS_WRITE, handle, (void *)buf, strlen((char *)buf));
+        if(error != 0) {
+            fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
+            host_action(SYS_CLOSE, handle);
+            return;
+        }
+
+        vTaskDelay(xDelay);
+    }
+    
+    host_action(SYS_CLOSE, handle);
+}
+
+int main()
+{
+	//init_rs232();
+	//enable_rs232_interrupts();
+	//enable_rs232();
+	
+	fs_init();
+	fio_init();
+	
+	//register_romfs("romfs", &_sromfs);
+	
+	/* Create the queue used by the serial task.  Messages for write to
+	 * the RS232. */
+	vSemaphoreCreateBinary(serial_tx_wait_sem);
+	/* Add for serial input 
+	 * Reference: www.freertos.org/a00116.html */
+	serial_rx_queue = xQueueCreate(1, sizeof(char));
+
+    register_devfs();
+	/* Create a task to output text read from romfs. */
+	xTaskCreate(command_prompt,
+	            (portCHAR *) "CLI",
+	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
+
+#if 0
+	/* Create a task to record system log. */
+	xTaskCreate(system_logger,
+	            (signed portCHAR *) "Logger",
+	            1024 /* stack size */, NULL, tskIDLE_PRIORITY + 1, NULL);
+#endif
+
+	/* Start running the tasks. */
 	vTaskStartScheduler();
+
+	return 0;
+}
+
+void vApplicationTickHook()
+{
 }
