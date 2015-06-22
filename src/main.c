@@ -17,6 +17,12 @@
 #include "shell.h"
 #include "host.h"
 
+
+unsigned int get_time();
+unsigned int get_reload();
+unsigned int get_current();
+
+
 /* _sromfs symbol can be found in main.ld linker script
  * it contains file system structure of test_romfs directory
  */
@@ -107,7 +113,49 @@ void command_prompt(void *pvParameters)
 	}
 
 }
+/* 
+ * Calculate the context switch time by vTaskDelay
+ */
+void cal_ct(void *pvParameters)
+{
+	
+        fio_printf(1,"now time from scheduler started to now = %d\r\n",get_time());   
+        int i = 0;
+	int record[10]={0};
+        for(; i < 10 ;i++){
+        /* 
+         * Use tick is more precisely than ms
+         */
+		vTaskDelay(1000 / portTICK_RATE_MS);
+        	//vTaskDelay(100);
+        	//fio_printf(1,"now time from scheduler started to now = %d\r\n",get_time());   
+		record[i] = get_time();
+        }
+	
+        for(i = 0; i < 10 ;i++){
+        	fio_printf(1,"now time from scheduler started to now = %d\r\n",record[i]);   
+	}
+}
+/* 
+ * Calculate the context switch time by vTaskDelayUntil
+ */
+void cal_ct2( void * pvParameters )
+{
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 10;
 
+	// Initialise the xLastWakeTime variable with the current time.
+        xLastWakeTime = xTaskGetTickCount();
+
+        for( ;; )
+        {
+            // Wait for the next cycle.
+            vTaskDelayUntil( &xLastWakeTime, xFrequency );
+
+            // Perform action here.
+            fio_printf(1,"now time from scheduler started to now = %d\r\n",get_time());   
+        }
+}
 void system_logger(void *pvParameters)
 {
     char buf[128];
@@ -178,6 +226,8 @@ int main()
 	            1024 /* stack size */, NULL, tskIDLE_PRIORITY + 1, NULL);
 #endif
 
+
+        xTaskCreate(cal_ct,(portCHAR *) "ct",1024,NULL,tskIDLE_PRIORITY + 3,NULL);
 	/* Start running the tasks. */
 	vTaskStartScheduler();
 
@@ -187,3 +237,27 @@ int main()
 void vApplicationTickHook()
 {
 }
+
+
+/* 
+ * time related function 
+ */
+unsigned int get_reload()
+{
+        return *(uint32_t *) 0xE000E014;
+}
+
+unsigned int get_current()
+{
+        return *(uint32_t *) 0xE000E018;
+}
+
+unsigned int get_time()
+{
+        static unsigned int const *reload = (void *) 0xE000E014;
+        static unsigned int const *current = (void *) 0xE000E018;
+        static const unsigned int scale = 1000000 / configTICK_RATE_HZ;
+                                        /* microsecond */
+        return xTaskGetTickCount() * scale + (*reload - *current) * (1.0) / (*reload / scale);
+}
+
