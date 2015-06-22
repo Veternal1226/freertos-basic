@@ -1,6 +1,5 @@
-//#define USE_STDPERIPH_DRIVER
-//#include "stm32f10x.h"
-//#include "stm32_p103.h"
+#include "stm32f4xx.h"
+#include "stm32_p103.h"
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -22,7 +21,7 @@
  */
 extern const unsigned char _sromfs;
 
-//static void setup_hardware();
+static void setup_hardware();
 
 volatile xSemaphoreHandle serial_tx_wait_sem = NULL;
 /* Add for serial input */
@@ -32,7 +31,6 @@ volatile xQueueHandle serial_rx_queue = NULL;
  * interrupts). */
 void USART2_IRQHandler()
 {
-#if 0
 	static signed portBASE_TYPE xHigherPriorityTaskWoken;
 
 	/* If this interrupt is for a transmit... */
@@ -62,7 +60,6 @@ void USART2_IRQHandler()
 	if (xHigherPriorityTaskWoken) {
 		taskYIELD();
 	}
-#endif
 }
 
 void send_byte(char ch)
@@ -76,13 +73,13 @@ void send_byte(char ch)
 	/* Send the byte and enable the transmit interrupt (it is disabled by
 	 * the interrupt).
 	 */
-	//USART_SendData(USART2, ch);
-	//USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
+	USART_SendData(USART2, ch);
+	USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
 }
 
 char recv_byte()
 {
-	//USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 	char msg;
 	while(!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
 	return msg;
@@ -152,14 +149,15 @@ void system_logger(void *pvParameters)
 
 int main()
 {
-	//init_rs232();
-	//enable_rs232_interrupts();
-	//enable_rs232();
+#if 0
+	init_rs232();
+	enable_rs232_interrupts();
+	enable_rs232();
 	
 	fs_init();
 	fio_init();
-	
-	//register_romfs("romfs", &_sromfs);
+	register_romfs("romfs", &_sromfs);
+#endif	
 	
 	/* Create the queue used by the serial task.  Messages for write to
 	 * the RS232. */
@@ -168,7 +166,7 @@ int main()
 	 * Reference: www.freertos.org/a00116.html */
 	serial_rx_queue = xQueueCreate(1, sizeof(char));
 
-    register_devfs();
+	register_devfs();
 	/* Create a task to output text read from romfs. */
 	xTaskCreate(command_prompt,
 	            (portCHAR *) "CLI",
