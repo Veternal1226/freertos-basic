@@ -1,6 +1,7 @@
 #include "stm32f4xx.h"
-#include "stm32_p103.h"
+//#include "stm32_p103.h"
 /* Scheduler includes. */
+#include "main.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -26,6 +27,26 @@ static void setup_hardware();
 volatile xSemaphoreHandle serial_tx_wait_sem = NULL;
 /* Add for serial input */
 volatile xQueueHandle serial_rx_queue = NULL;
+
+
+ void prvInit()
+  {
+          //LCD init
+          LCD_Init();
+          IOE_Config();
+          LTDC_Cmd( ENABLE );
+ 
+          LCD_LayerInit();
+          LCD_SetLayer( LCD_FOREGROUND_LAYER );
+          LCD_Clear( LCD_COLOR_BLACK );
+          LCD_SetTextColor( LCD_COLOR_WHITE );
+  
+          //Button
+          STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_GPIO );
+  
+          //LED
+          STM_EVAL_LEDInit( LED3 );
+  }
 
 /* IRQ handler to handle USART2 interruptss (both transmit and receive
  * interrupts). */
@@ -153,11 +174,10 @@ int main()
 	init_rs232();
 	enable_rs232_interrupts();
 	enable_rs232();
-	
+#endif	
 	fs_init();
 	fio_init();
-	register_romfs("romfs", &_sromfs);
-#endif	
+	//register_romfs("romfs", &_sromfs);
 	
 	/* Create the queue used by the serial task.  Messages for write to
 	 * the RS232. */

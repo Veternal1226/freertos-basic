@@ -1,9 +1,9 @@
 #include "stm32_p103.h"
-#include "stm32f10x.h"
-#include "stm32f10x_gpio.h"
-#include "stm32f10x_rcc.h"
-#include "stm32f10x_usart.h"
-#include "stm32f10x_exti.h"
+#include "stm32f4xx.h"
+#include "stm32f4xx_gpio.h"
+#include "stm32f4xx_rcc.h"
+#include "stm32f4xx_usart.h"
+#include "stm32f4xx_exti.h"
 #include "misc.h"
 
 void init_led(void)
