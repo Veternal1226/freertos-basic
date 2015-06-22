@@ -171,14 +171,19 @@ void system_logger(void *pvParameters)
 int main()
 {
 #if 0
-	init_rs232();
-	enable_rs232_interrupts();
-	enable_rs232();
-#endif	
+	//init_rs232();
+	//enable_rs232_interrupts();
+	//enable_rs232();
 	fs_init();
 	fio_init();
 	//register_romfs("romfs", &_sromfs);
-prvInit();	
+#endif	
+
+prvInit();
+
+#if 1 //test LCD Library
+LCD_DrawFullCircle(100, 100, 20);
+#endif	
 	/* Create the queue used by the serial task.  Messages for write to
 	 * the RS232. */
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
