@@ -28,7 +28,6 @@ volatile xSemaphoreHandle serial_tx_wait_sem = NULL;
 /* Add for serial input */
 volatile xQueueHandle serial_rx_queue = NULL;
 
-
  void prvInit()
   {
           //LCD init
@@ -170,6 +169,7 @@ void system_logger(void *pvParameters)
 
 int main()
 {
+
 #if 0
 	//init_rs232();
 	//enable_rs232_interrupts();

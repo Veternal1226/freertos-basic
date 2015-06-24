@@ -14,6 +14,7 @@ LD = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 SIZE = $(CROSS_COMPILE)size
+GDB = $(CROSS_COMPILE)gdb
 
 # Cortex-M4 implements the ARMv7E-M architecture
 CPU = cortex-m4
@@ -122,6 +123,8 @@ CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK \
 	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/inc \
 	  -I $(PWD)/Utilities/STM32F429I-Discovery
 
+SEMIHOSTING_FLAGS = --specs=rdimon.specs -lc -lrdimon
+
 all: $(BIN_IMAGE)
 
 $(BIN_IMAGE): $(EXECUTABLE)
@@ -136,10 +139,10 @@ $(EXECUTABLE): $(OBJS)
 		$(LDFLAGS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(SEMIHOSTING_FLAGS) $(CFLAGS) -c $< -o $@
 
 %.o: %.S
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(SEMIHOSTING_FLAGS) $(CFLAGS) -c $< -o $@
 
 flash:
 	st-flash write $(BIN_IMAGE) 0x8000000
@@ -151,3 +154,10 @@ clean:
 	rm -rf $(HEX_IMAGE)
 	rm -f $(OBJS)
 	rm -f $(PROJECT).lst
+
+gdb: all
+	$(GDB) $(EXECUTABLE)
+
+openocd:
+	openocd -f board/stm32f4discovery.cfg
+ 
