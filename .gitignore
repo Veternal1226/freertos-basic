@@ -13,3 +13,5 @@ Makefile_old
 /visualizer/times
 /visualizer/out/
 old/
+.DS_Store
+DAC_OUT_PUT*

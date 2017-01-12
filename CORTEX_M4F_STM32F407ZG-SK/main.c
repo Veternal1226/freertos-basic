@@ -185,7 +185,7 @@ prvInit();
 LCD_DrawFullCircle(100, 100, 20);
 
 //LCD_DisplayStringLine(uint16_t Line, uint8_t *ptr);
-uint8_t str[] = {'W', 'e', 'l', 'c', 'o', 'm', 'e'};
+uint8_t str[] = {'H', 'i', '!', ' ', 'V', 'e', 'c', 'k'};
 LCD_DisplayStringLine(0, str);
 
 //LCD_DrawChar(uint16_t Xpos, uint16_t Ypos, const uint16_t *c);

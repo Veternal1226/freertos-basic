@@ -5,7 +5,7 @@ BIN_IMAGE = $(PROJECT).bin
 HEX_IMAGE = $(PROJECT).hex
 
 # set the path to STM32F429I-Discovery firmware package
-STDP ?= ../STM32F429I-Discovery_FW_V1.0.1
+# STDP ?= ../STM32F429I-Discovery_FW_V1.0.1
 
 # Toolchain configurations
 CROSS_COMPILE ?= arm-none-eabi-
@@ -60,7 +60,7 @@ OBJS += \
       $(PWD)/CORTEX_M4F_STM32F407ZG-SK/startup/system_stm32f4xx.o \
       #$(PWD)/CORTEX_M4F_STM32F407ZG-SK/stm32f4xx_it.o \
 
-RTOS = $(PWD)/FreeRTOS
+RTOS = $(PWD)/freertos/FreeRTOS
 
 OBJS += \
       $(RTOS)/croutine.o \
@@ -73,18 +73,18 @@ OBJS += \
       $(RTOS)/portable/MemMang/heap_1.o \
 
 OBJS += \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/misc.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma2d.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fmc.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/misc.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma2d.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.o \
+    $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fmc.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_sdram.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_lcd.o \
@@ -118,9 +118,9 @@ CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK \
 	  -I $(RTOS)/include \
 	  -I $(RTOS)/portable/GCC/ARM_CM4F \
 	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/board \
-	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/CMSIS/Device/ST/STM32F4xx/Include \
-	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/CMSIS/Include \
-	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/inc \
+	  -I $(PWD)/freertos/CMSIS/Device/ST/STM32F4xx/Include \
+	  -I $(PWD)/freertos/CMSIS/Include \
+	  -I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \
 	  -I $(PWD)/Utilities/STM32F429I-Discovery
 
 SEMIHOSTING_FLAGS = --specs=rdimon.specs -lc -lrdimon
