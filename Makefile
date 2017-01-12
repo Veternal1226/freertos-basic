@@ -57,8 +57,7 @@ CFLAGS += -D"assert_param(expr)=((void)0)"
 #My restart
 OBJS += \
       $(PWD)/CORTEX_M4F_STM32F407ZG-SK/main.o \
-      $(PWD)/CORTEX_M4F_STM32F407ZG-SK/startup/system_stm32f4xx.o \
-      #$(PWD)/CORTEX_M4F_STM32F407ZG-SK/stm32f4xx_it.o \
+      $(PWD)/CORTEX_M4F_STM32F407ZG-SK/startup/system_stm32f4xx.o
 
 RTOS = $(PWD)/freertos/FreeRTOS
 
@@ -90,28 +89,24 @@ OBJS += \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_lcd.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_ioe.o
 
-#Game
-#OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/game/game.o
-#CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/game
-
-#App
+#Custom C Library
 OBJS += \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/clib.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/dir.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/filesystem.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/fio.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/mouse.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/osdebug.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/romfs.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/shell.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/hash-djb2.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/host.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/mmtest.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/string-util.o \
-	#$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/stm32_p103.o \
-    	#$(PWD)/CORTEX_M4F_STM32F407ZG-SK/app/main.o
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/clib.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/dir.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/filesystem.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/fio.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/mouse.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/osdebug.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/romfs.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/shell.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/hash-djb2.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/host.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/mmtest.o \
+	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/string-util.o \
+	#$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/stm32_p103.o \
+    	#$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/main.o
 
-CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/app
+CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib
 
 CFLAGS += -DUSE_STDPERIPH_DRIVER
 CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK \
