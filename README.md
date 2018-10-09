@@ -1,9 +1,12 @@
 
 This branch is used to implement porting freertos-basic onto STM32F4 Discovery.
 
-We adpated TheKK/myFreeRTOS. The source code of FreeRTOS kernel are in folder FreeRTOS. Application codes are in CORTEX_M4F_STM32F407ZG-SK/app and main.c in the same folder.
+We adpated TheKK/myFreeRTOS. 
+
+The source code of FreeRTOS kernel are in folder FreeRTOS. 
+
+Application codes are in Source/app and main.c in the same folder. This folder is FreeRTOS/Demo/CORTEX_M4F_STM32F407ZG-SK.
 
 Version of kernel is 8.2.1.
 
-
-In Utilities/, **STM32F429I-Discovery** include library in **Common/** and **Third_Party**. As a result, do not remove them even if they were not mentioned in Makefile.
+In Utilities/, **STM32F429I-Discovery** include library in **Common/** and **Third_Party**. As a result, do not remove them even if they were not mentioned in Makefile. This folder is ST-supported drivers.

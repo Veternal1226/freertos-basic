@@ -45,10 +45,10 @@ CFLAGS += -DSTM32F429_439xx
 
 # to run from FLASH
 CFLAGS += -DVECT_TAB_FLASH
-LDFLAGS += -T $(PWD)/CORTEX_M4F_STM32F407ZG-SK/stm32f429zi_flash.ld
+LDFLAGS += -T $(PWD)/Source/stm32f429zi_flash.ld
 
 # STARTUP FILE
-OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/startup_stm32f429_439xx.o
+OBJS += $(PWD)/Source/startup_stm32f429_439xx.o
 
 # STM32F4xx_StdPeriph_Driver
 CFLAGS += -DUSE_STDPERIPH_DRIVER
@@ -56,8 +56,8 @@ CFLAGS += -D"assert_param(expr)=((void)0)"
 
 #My restart
 OBJS += \
-      $(PWD)/CORTEX_M4F_STM32F407ZG-SK/main.o \
-      $(PWD)/CORTEX_M4F_STM32F407ZG-SK/startup/system_stm32f4xx.o
+      $(PWD)/Source/main.o \
+      $(PWD)/Source/startup/system_stm32f4xx.o
 
 RTOS = $(PWD)/freertos/FreeRTOS
 
@@ -91,28 +91,28 @@ OBJS += \
 
 #Custom C Library
 OBJS += \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/clib.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/dir.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/filesystem.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/fio.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/mouse.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/osdebug.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/romfs.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/shell.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/hash-djb2.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/host.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/mmtest.o \
-	$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/string-util.o \
-	#$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/stm32_p103.o \
-    	#$(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib/main.o
+	$(PWD)/Source/lib/clib.o \
+	$(PWD)/Source/lib/dir.o \
+	$(PWD)/Source/lib/filesystem.o \
+	$(PWD)/Source/lib/fio.o \
+	$(PWD)/Source/lib/mouse.o \
+	$(PWD)/Source/lib/osdebug.o \
+	$(PWD)/Source/lib/romfs.o \
+	$(PWD)/Source/lib/shell.o \
+	$(PWD)/Source/lib/hash-djb2.o \
+	$(PWD)/Source/lib/host.o \
+	$(PWD)/Source/lib/mmtest.o \
+	$(PWD)/Source/lib/string-util.o \
+	#$(PWD)/Source/lib/stm32_p103.o \
+    	#$(PWD)/Source/lib/main.o
 
-CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/lib
+CFLAGS += -I $(PWD)/Source/lib
 
 CFLAGS += -DUSE_STDPERIPH_DRIVER
-CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK \
+CFLAGS += -I $(PWD)/Source \
 	  -I $(RTOS)/include \
 	  -I $(RTOS)/portable/GCC/ARM_CM4F \
-	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/board \
+	  -I $(PWD)/Source/board \
 	  -I $(PWD)/freertos/CMSIS/Device/ST/STM32F4xx/Include \
 	  -I $(PWD)/freertos/CMSIS/Include \
 	  -I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \

@@ -182,17 +182,17 @@ int main()
 prvInit();
 
 #if 1 //test LCD Library
-LCD_DrawFullCircle(100, 100, 20);
+LCD_DrawFullCircle(100, 100, 50); // (x, y, radius)
 
 //LCD_DisplayStringLine(uint16_t Line, uint8_t *ptr);
 uint8_t str[] = {'H', 'i', '!', ' ', 'V', 'e', 'c', 'k'};
 LCD_DisplayStringLine(0, str);
 
 //LCD_DrawChar(uint16_t Xpos, uint16_t Ypos, const uint16_t *c);
-//uint16_t Xpos = 23;
-//uint16_t Ypos = 220;
-//const uint16_t c = 'A';
-//LCD_DrawChar(Xpos, Ypos, &c);
+// uint16_t Xpos = 23;
+// uint16_t Ypos = 220;
+// const uint16_t c = 'A';
+// LCD_DrawChar(Xpos, Ypos, &c);
 
 //LCD_DisplayChar(uint16_t Line, uint16_t Column, uint8_t Ascii);
 //LCD_DisplayChar(170, 45, 0x97);
