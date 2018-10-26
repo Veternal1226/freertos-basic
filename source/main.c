@@ -30,21 +30,21 @@ volatile xQueueHandle serial_rx_queue = NULL;
 
  void prvInit()
   {
-          //LCD init
-          LCD_Init();
-          IOE_Config();
-          LTDC_Cmd( ENABLE );
- 
-          LCD_LayerInit();
-          LCD_SetLayer( LCD_FOREGROUND_LAYER );
-          LCD_Clear( LCD_COLOR_BLACK );
-          LCD_SetTextColor( LCD_COLOR_WHITE );
-	  LCD_SetBackColor( LCD_COLOR_BLACK );  
-          //Button
-          STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_GPIO );
-  
-          //LED
-          STM_EVAL_LEDInit( LED3 );
+    //LCD init
+    LCD_Init();
+    IOE_Config();
+    LTDC_Cmd( ENABLE );
+
+    LCD_LayerInit();
+    LCD_SetLayer( LCD_FOREGROUND_LAYER );
+    LCD_Clear( LCD_COLOR_BLACK );
+    LCD_SetTextColor( LCD_COLOR_WHITE );
+		LCD_SetBackColor( LCD_COLOR_BLACK );  
+    //Button
+    STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_GPIO );
+
+    //LED
+    STM_EVAL_LEDInit( LED3 );
   }
 
 /* IRQ handler to handle USART2 interruptss (both transmit and receive
