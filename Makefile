@@ -136,7 +136,7 @@ $(EXECUTABLE): $(OBJS)
 %.o: %.c
 	$(CC) $(SEMIHOSTING_FLAGS) $(CFLAGS) -c $< -o $@
 
-%.o: %.S
+%.o: %.s
 	$(CC) $(SEMIHOSTING_FLAGS) $(CFLAGS) -c $< -o $@
 
 flash:
