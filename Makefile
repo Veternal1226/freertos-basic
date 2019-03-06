@@ -45,10 +45,10 @@ CFLAGS += -DSTM32F429_439xx
 
 # to run from FLASH
 CFLAGS += -DVECT_TAB_FLASH
-LDFLAGS += -T $(PWD)/Source/stm32f429zi_flash.ld
+LDFLAGS += -T $(PWD)/source/stm32f429zi_flash.ld
 
 # STARTUP FILE
-OBJS += $(PWD)/Source/startup_stm32f429_439xx.o
+OBJS += $(PWD)/source/startup_stm32f429_439xx.o
 
 # STM32F4xx_StdPeriph_Driver
 CFLAGS += -DUSE_STDPERIPH_DRIVER
@@ -56,8 +56,8 @@ CFLAGS += -D"assert_param(expr)=((void)0)"
 
 #My restart
 OBJS += \
-      $(PWD)/Source/main.o \
-      $(PWD)/Source/startup/system_stm32f4xx.o
+      $(PWD)/source/main.o \
+      $(PWD)/source/startup/system_stm32f4xx.o
 
 RTOS = $(PWD)/freertos/FreeRTOS
 
@@ -91,28 +91,28 @@ OBJS += \
 
 #Custom C Library
 OBJS += \
-	$(PWD)/Source/lib/clib.o \
-	$(PWD)/Source/lib/dir.o \
-	$(PWD)/Source/lib/filesystem.o \
-	$(PWD)/Source/lib/fio.o \
-	$(PWD)/Source/lib/mouse.o \
-	$(PWD)/Source/lib/osdebug.o \
-	$(PWD)/Source/lib/romfs.o \
-	$(PWD)/Source/lib/shell.o \
-	$(PWD)/Source/lib/hash-djb2.o \
-	$(PWD)/Source/lib/host.o \
-	$(PWD)/Source/lib/mmtest.o \
-	$(PWD)/Source/lib/string-util.o \
-	#$(PWD)/Source/lib/stm32_p103.o \
-    	#$(PWD)/Source/lib/main.o
+	$(PWD)/source/lib/clib.o \
+	$(PWD)/source/lib/dir.o \
+	$(PWD)/source/lib/filesystem.o \
+	$(PWD)/source/lib/fio.o \
+	$(PWD)/source/lib/mouse.o \
+	$(PWD)/source/lib/osdebug.o \
+	$(PWD)/source/lib/romfs.o \
+	$(PWD)/source/lib/shell.o \
+	$(PWD)/source/lib/hash-djb2.o \
+	$(PWD)/source/lib/host.o \
+	$(PWD)/source/lib/mmtest.o \
+	$(PWD)/source/lib/string-util.o \
+	#$(PWD)/source/lib/stm32_p103.o \
+    	#$(PWD)/source/lib/main.o
 
-CFLAGS += -I $(PWD)/Source/lib
+CFLAGS += -I $(PWD)/source/lib
 
 CFLAGS += -DUSE_STDPERIPH_DRIVER
-CFLAGS += -I $(PWD)/Source \
+CFLAGS += -I $(PWD)/source \
 	  -I $(RTOS)/include \
 	  -I $(RTOS)/portable/GCC/ARM_CM4F \
-	  -I $(PWD)/Source/board \
+	  -I $(PWD)/source/board \
 	  -I $(PWD)/freertos/CMSIS/Device/ST/STM32F4xx/Include \
 	  -I $(PWD)/freertos/CMSIS/Include \
 	  -I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \
