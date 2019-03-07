@@ -16,18 +16,13 @@ OBJDUMP = $(CROSS_COMPILE)objdump
 SIZE = $(CROSS_COMPILE)size
 GDB = $(CROSS_COMPILE)gdb
 
+# CFLAGS Reference: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
+
 # Cortex-M4 implements the ARMv7E-M architecture
 CPU = cortex-m4
 CFLAGS = -mcpu=$(CPU) -march=armv7e-m -mtune=cortex-m4
 CFLAGS += -mlittle-endian -mthumb
 CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -O0
-# Reference: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
-
-define get_library_path
-    $(shell dirname $(shell $(CC) $(CFLAGS) -print-file-name=$(1)))
-endef
-LDFLAGS += -L $(call get_library_path,libc.a)
-LDFLAGS += -L $(call get_library_path,libgcc.a)
 
 # Basic configurations
 CFLAGS += -g -std=c99
@@ -44,23 +39,41 @@ CFLAGS += -DSTM32F429_439xx
 
 # to run from FLASH
 CFLAGS += -DVECT_TAB_FLASH
-LDFLAGS += -T $(PWD)/source/stm32f429zi_flash.ld
-LDFLAGS += --gc-sections
-
-# STARTUP FILE
-OBJS += $(PWD)/source/startup_stm32f429_439xx.o
 
 # STM32F4xx_StdPeriph_Driver
 CFLAGS += -DUSE_STDPERIPH_DRIVER
 CFLAGS += -D"assert_param(expr)=((void)0)"
+CFLAGS += -I $(PWD)/source/lib
+CFLAGS += -DUSE_STDPERIPH_DRIVER
+CFLAGS += -I $(PWD)/source \
+	  -I $(RTOS)/include \
+	  -I $(RTOS)/portable/GCC/ARM_CM4F \
+	  -I $(PWD)/source/board \
+	  -I $(PWD)/freertos/CMSIS/Device/ST/STM32F4xx/Include \
+	  -I $(PWD)/freertos/CMSIS/Include \
+	  -I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \
+	  -I $(PWD)/Utilities/STM32F429I-Discovery
+SEMIHOSTING_FLAGS = --specs=rdimon.specs -lc -lrdimon
+
+define get_library_path
+    $(shell dirname $(shell $(CC) $(CFLAGS) -print-file-name=$(1)))
+endef
+LDFLAGS += -L $(call get_library_path,libc.a)
+LDFLAGS += -L $(call get_library_path,libgcc.a)
+LDFLAGS += -T $(PWD)/source/stm32f429zi_flash.ld
+LDFLAGS += --gc-sections
+
+
+# STARTUP FILE
+OBJS += $(PWD)/source/startup_stm32f429_439xx.o
 
 #My restart
 OBJS += \
       $(PWD)/source/main.o \
       $(PWD)/source/startup/system_stm32f4xx.o
 
-RTOS = $(PWD)/freertos/FreeRTOS
 
+RTOS = $(PWD)/freertos/FreeRTOS
 OBJS += \
       $(RTOS)/croutine.o \
       $(RTOS)/event_groups.o \
@@ -105,20 +118,6 @@ OBJS += \
 	$(PWD)/source/lib/string-util.o \
 	#$(PWD)/source/lib/stm32_p103.o \
     	#$(PWD)/source/lib/main.o
-
-CFLAGS += -I $(PWD)/source/lib
-
-CFLAGS += -DUSE_STDPERIPH_DRIVER
-CFLAGS += -I $(PWD)/source \
-	  -I $(RTOS)/include \
-	  -I $(RTOS)/portable/GCC/ARM_CM4F \
-	  -I $(PWD)/source/board \
-	  -I $(PWD)/freertos/CMSIS/Device/ST/STM32F4xx/Include \
-	  -I $(PWD)/freertos/CMSIS/Include \
-	  -I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \
-	  -I $(PWD)/Utilities/STM32F429I-Discovery
-
-SEMIHOSTING_FLAGS = --specs=rdimon.specs -lc -lrdimon
 
 all: $(BIN_IMAGE)
 
