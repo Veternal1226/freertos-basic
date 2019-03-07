@@ -39,6 +39,8 @@ CFLAGS += -DSTM32F429_439xx
 
 # STM32F4xx_StdPeriph_Driver
 CFLAGS += -DUSE_STDPERIPH_DRIVER
+
+RTOS = $(PWD)/freertos/FreeRTOS
 CFLAGS += -I $(PWD)/source/lib
 CFLAGS += -I $(PWD)/source \
 	  -I $(RTOS)/include \
@@ -68,7 +70,7 @@ OBJS += \
       $(PWD)/source/startup/system_stm32f4xx.o
 
 
-RTOS = $(PWD)/freertos/FreeRTOS
+
 OBJS += \
       $(RTOS)/croutine.o \
       $(RTOS)/event_groups.o \
