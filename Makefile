@@ -36,7 +36,6 @@ CFLAGS += -Wall
 # Optimizations
 # CFLAGS += -ffast-math
 CFLAGS += -ffunction-sections -fdata-sections
-CFLAGS += -Wl,--gc-sections
 CFLAGS += -fno-common
 CFLAGS += --param max-inline-insns-single=1000
 
@@ -46,6 +45,7 @@ CFLAGS += -DSTM32F429_439xx
 # to run from FLASH
 CFLAGS += -DVECT_TAB_FLASH
 LDFLAGS += -T $(PWD)/source/stm32f429zi_flash.ld
+LDFLAGS += --gc-sections
 
 # STARTUP FILE
 OBJS += $(PWD)/source/startup_stm32f429_439xx.o
