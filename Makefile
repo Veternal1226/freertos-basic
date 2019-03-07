@@ -60,7 +60,6 @@ LDFLAGS += -L $(call get_library_path,libgcc.a)
 LDFLAGS += -T $(PWD)/source/stm32f429zi_flash.ld
 LDFLAGS += --gc-sections
 
-
 # STARTUP FILE
 OBJS += $(PWD)/source/startup_stm32f429_439xx.o
 
@@ -68,8 +67,6 @@ OBJS += $(PWD)/source/startup_stm32f429_439xx.o
 OBJS += \
       $(PWD)/source/main.o \
       $(PWD)/source/startup/system_stm32f4xx.o
-
-
 
 OBJS += \
       $(RTOS)/croutine.o \
