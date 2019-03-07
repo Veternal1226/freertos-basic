@@ -43,7 +43,6 @@ CFLAGS += -DUSE_STDPERIPH_DRIVER
 RTOS = $(PWD)/freertos/FreeRTOS
 CFLAGS += -I $(PWD)/source \
 		-I $(PWD)/source/lib \
-		-I $(PWD)/source/board \
 		-I $(RTOS)/include \
 		-I $(RTOS)/portable/GCC/ARM_CM4F \
 		-I $(PWD)/freertos/CMSIS/Device/ST/STM32F4xx/Include \
