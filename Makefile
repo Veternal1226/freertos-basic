@@ -38,8 +38,8 @@ CFLAGS += --param max-inline-insns-single=1000
 CFLAGS += -DSTM32F429_439xx
 
 # STM32F4xx_StdPeriph_Driver
-CFLAGS += -I $(PWD)/source/lib
 CFLAGS += -DUSE_STDPERIPH_DRIVER
+CFLAGS += -I $(PWD)/source/lib
 CFLAGS += -I $(PWD)/source \
 	  -I $(RTOS)/include \
 	  -I $(RTOS)/portable/GCC/ARM_CM4F \
