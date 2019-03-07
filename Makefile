@@ -41,15 +41,15 @@ CFLAGS += -DSTM32F429_439xx
 CFLAGS += -DUSE_STDPERIPH_DRIVER
 
 RTOS = $(PWD)/freertos/FreeRTOS
-CFLAGS += -I $(PWD)/source/lib
 CFLAGS += -I $(PWD)/source \
-	  -I $(RTOS)/include \
-	  -I $(RTOS)/portable/GCC/ARM_CM4F \
-	  -I $(PWD)/source/board \
-	  -I $(PWD)/freertos/CMSIS/Device/ST/STM32F4xx/Include \
-	  -I $(PWD)/freertos/CMSIS/Include \
-	  -I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \
-	  -I $(PWD)/Utilities/STM32F429I-Discovery
+		-I $(PWD)/source/lib \
+		-I $(PWD)/source/board \
+		-I $(RTOS)/include \
+		-I $(RTOS)/portable/GCC/ARM_CM4F \
+		-I $(PWD)/freertos/CMSIS/Device/ST/STM32F4xx/Include \
+		-I $(PWD)/freertos/CMSIS/Include \
+		-I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \
+		-I $(PWD)/Utilities/STM32F429I-Discovery
 SEMIHOSTING_FLAGS = --specs=rdimon.specs -lc -lrdimon
 
 define get_library_path
