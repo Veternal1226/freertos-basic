@@ -20,8 +20,8 @@ GDB = $(CROSS_COMPILE)gdb
 CPU = cortex-m4
 CFLAGS = -mcpu=$(CPU) -march=armv7e-m -mtune=cortex-m4
 CFLAGS += -mlittle-endian -mthumb
-# Need study
 CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -O0
+# Reference: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
 
 define get_library_path
     $(shell dirname $(shell $(CC) $(CFLAGS) -print-file-name=$(1)))
