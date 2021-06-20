@@ -42,7 +42,6 @@ CFLAGS += -DSTM32F429_439xx
 
 RTOS = $(PWD)/freertos/FreeRTOS
 CFLAGS += -I $(PWD)/source \
-		-I $(PWD)/source/lib \
 		-I $(PWD)/source/startup \
 		-I $(RTOS)/include \
 		-I $(RTOS)/portable/GCC/ARM_CM4F \
