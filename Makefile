@@ -1,8 +1,8 @@
-PROJECT = usart1
+PROJECT = myRTOS
 
 EXECUTABLE = $(PROJECT).elf
 BIN_IMAGE = $(PROJECT).bin
-HEX_IMAGE = $(PROJECT).hex
+#HEX_IMAGE = $(PROJECT).hex
 
 # set the path to STM32F429I-Discovery firmware package
 # STDP ?= ../STM32F429I-Discovery_FW_V1.0.1
@@ -38,7 +38,7 @@ CFLAGS += --param max-inline-insns-single=1000
 CFLAGS += -DSTM32F429_439xx
 
 # STM32F4xx_StdPeriph_Driver
-CFLAGS += -DUSE_STDPERIPH_DRIVER
+#CFLAGS += -DUSE_STDPERIPH_DRIVER
 
 RTOS = $(PWD)/freertos/FreeRTOS
 CFLAGS += -I $(PWD)/source \
@@ -47,9 +47,9 @@ CFLAGS += -I $(PWD)/source \
 		-I $(RTOS)/include \
 		-I $(RTOS)/portable/GCC/ARM_CM4F \
 		-I $(PWD)/freertos/CMSIS/Include \
-		-I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \
+#		-I $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/inc \
 		-I $(PWD)/Utilities/STM32F429I-Discovery 
-SEMIHOSTING_FLAGS = --specs=rdimon.specs -lc -lrdimon
+#SEMIHOSTING_FLAGS = --specs=rdimon.specs -lc -lrdimon
 
 define get_library_path
     $(shell dirname $(shell $(CC) $(CFLAGS) -print-file-name=$(1)))
@@ -77,7 +77,7 @@ OBJS += \
       $(RTOS)/portable/GCC/ARM_CM4F/port.o \
       $(RTOS)/portable/MemMang/heap_1.o \
 
-OBJS += \
+#OBJS += \
     $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/misc.o \
     $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.o \
     $(PWD)/freertos/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.o \
@@ -96,7 +96,7 @@ OBJS += \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_ioe.o
 
 #Custom C Library
-OBJS += \
+#OBJS += \
 	$(PWD)/source/lib/clib.o \
 	$(PWD)/source/lib/dir.o \
 	$(PWD)/source/lib/filesystem.o \
@@ -116,7 +116,7 @@ all: $(BIN_IMAGE)
 
 $(BIN_IMAGE): $(EXECUTABLE)
 	$(OBJCOPY) -O binary $^ $@
-	$(OBJCOPY) -O ihex $^ $(HEX_IMAGE)
+#	$(OBJCOPY) -O ihex $^ $(HEX_IMAGE)
 	$(OBJDUMP) -h -S -D $(EXECUTABLE) > $(PROJECT).lst
 	$(SIZE) $(EXECUTABLE)
 	
@@ -126,10 +126,12 @@ $(EXECUTABLE): $(OBJS)
 		$(LDFLAGS)
 
 %.o: %.c
-	$(CC) $(SEMIHOSTING_FLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
+#	$(CC) $(SEMIHOSTING_FLAGS) $(CFLAGS) -c $< -o $@
 
 %.o: %.S
-	$(CC) $(SEMIHOSTING_FLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
+#	$(CC) $(SEMIHOSTING_FLAGS) $(CFLAGS) -c $< -o $@
 
 flash:
 	st-flash write $(BIN_IMAGE) 0x8000000
